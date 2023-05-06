@@ -3,12 +3,7 @@
 # inicia_configuracao
 # encerra_jogo
 
-# MENU
-# parte inicial (oq você quer fazer?)
-    # -> configurar
-        # -> inserir palavras
-        # -> remover palavras
-        # -> encerrar configuração
-    # -> jogar
-        # -> iniciar jogo
-    # -> encerrar
+import menu
+from forca import Estado
+
+menu.montaMenu(Estado.CONFIGURACAO)
