@@ -12,8 +12,9 @@ class Menu:
         CONF_REMOVER = 'Remover Palavra'
         CONF_ENCERRAR = 'Encerrar Configurações'
     
-    def __init__(self):
-        self.listaOpcoes = self.getOpcoesMenu(forca.getEstado())
+    def __init__(self, estadoForca: forca.Estado):
+        self.listaOpcoes = self.getOpcoesMenu(estadoForca)
+        self.montaMenu(estadoForca)
 
     def montaMenu(self, estadoForca: forca.Estado):
         self.listaOpcoes = self.getOpcoesMenu(estadoForca)
@@ -26,16 +27,14 @@ class Menu:
 
     def entraOpcao(self):
         entradaValida = False
-        entrada = input("Por favor, insira uma opção: ")
+        dado = 0
 
+        entrada = input("Por favor, insira uma opção: ")
         while(not entradaValida):
             try:
                 dado = int(entrada)
             except:
-                if (entrada == ''):
-                    return ''
-                else:
-                    entradaValida = False
+                entradaValida = False
             else:
                 entradaValida = self.validaEntrada(dado)
 

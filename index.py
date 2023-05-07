@@ -25,7 +25,6 @@ def encerraPartida():
 def encerra():
     pass
 
-menu = Menu()
-menu.montaMenu(Estado.INICIAL)
+menu = Menu(Estado.INICIAL)
 func = menu.getFuncaoOpcao(menu.entraOpcao())
 func()
