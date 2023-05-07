@@ -3,7 +3,10 @@
 # inicia_configuracao
 # encerra_jogo
 
-import menu
+from menu import Menu
 from forca import Estado
 
-menu.montaMenu(Estado.CONFIGURACAO)
+menu = Menu()
+menu.montaMenu(Estado.INICIAL)
+func = menu.getFuncaoOpcao(menu.entraOpcao())
+func()

@@ -5,6 +5,9 @@ class Estado(str, Enum):
     CONFIGURACAO = 'Configuração'
     PARTIDA = 'Partida'
 
+def getEstado():
+    # TODO implementar
+    return Estado.INICIAL
 # criaForca
     # montar a parte visual
     # selecionaPalavra
