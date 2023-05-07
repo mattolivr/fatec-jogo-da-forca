@@ -1,7 +1,7 @@
 from enum import Enum
 
 import forca
-from configuracao import iniciaConfiguracao
+import index as operacoes
 class Menu:
     class Opcoes(str, Enum):
         INI_CONFIGURAR = 'Configurar Jogo'
@@ -52,6 +52,9 @@ class Menu:
             return False
         return True
 
+    def getOpcao(self, dado: int):
+        return self.listaOpcoes[dado]
+    
     def getOpcoesMenu(self, estadoForca: forca.Estado):
         match estadoForca:
             case forca.Estado.INICIAL:
@@ -64,15 +67,12 @@ class Menu:
                         self.Opcoes.CONF_ENCERRAR]
         return []
 
-    def getOpcao(self, dado: int):
-        return self.listaOpcoes[dado]
-
     def getFuncaoOpcao(self, dado: int):
         match self.getOpcao(dado):
             case self.Opcoes.INI_CONFIGURAR:
-                return iniciaConfiguracao
+                return operacoes.configurar
             case self.Opcoes.INI_JOGAR:
-                print("Começando Jogo")
+                return operacoes.jogar
             case self.Opcoes.INI_ENCERRAR:
-                print("Encerrando...")
+                return operacoes.encerra
         # raise função não encontrada
