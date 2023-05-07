@@ -10,11 +10,8 @@ class Menu:
 
         CONF_ADICIONAR = 'Adicionar Palavra'
         CONF_REMOVER = 'Remover Palavra'
+        CONF_LISTAR = 'Listar Palavras'
         CONF_ENCERRAR = 'Encerrar Configurações'
-
-    def __init__(self, estadoForca: Estado):
-        self.listaOpcoes = self.getOpcoesMenu(estadoForca)
-        self.montaMenu(estadoForca)
 
     def montaMenu(self, estadoForca: Estado):
         self.listaOpcoes = self.getOpcoesMenu(estadoForca)
@@ -37,5 +34,6 @@ class Menu:
             case Estado.CONFIGURACAO:
                 return [self.Opcoes.CONF_ADICIONAR,
                         self.Opcoes.CONF_REMOVER,
+                        self.Opcoes.CONF_LISTAR,
                         self.Opcoes.CONF_ENCERRAR]
         return []

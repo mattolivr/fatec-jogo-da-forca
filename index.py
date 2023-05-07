@@ -5,11 +5,38 @@ from estado import Estado
 class Jogo():
 
     def __init__(self):
-        self.__setEstado(Estado.INICIAL)
-        self.__menu = Menu(self.__getEstado())
+        self.setEstado(Estado.INICIAL)
+        self.__menu = Menu()
 
     def configurar(self):
-        config = Configuracao()
+        self.__configuracao = Configuracao()
+
+        self.setEstado(Estado.CONFIGURACAO)
+        self.mostraMenu()
+        self.aguardaFuncao()
+
+    def confAdicionaPalavra(self):
+        palavra = input("Insira uma palavra: ")
+
+        if (len(palavra) > 0):
+            self.__configuracao.adicionaPalavra(self)
+
+        print("palavra", palavra, "adicionada")
+
+    def confRemovePalavra(self):
+        # TODO: adicionar remoção por índice
+        palavra = input("Insira uma palavra: ")
+
+        try:
+            self.__configuracao.removePalavra(palavra)
+        except e:
+            print(str(e))
+
+    def confListaPalavras(self):
+        self.__configuracao.listaPalavras()
+
+    def confEncerrar():
+        jogo.setEstado(Estado.INICIAL)
 
     def jogar(self):
         pass
@@ -20,13 +47,14 @@ class Jogo():
     def mostraMenu(self):
         self.__menu.montaMenu(self.__getEstado())
 
-    def aguardaDado(self):
+    def aguardaFuncao(self):
         dado = self.__entraOpcao()
         self.__executaFuncao(dado)
 
     def __executaFuncao(self, dado: int):
         funcao = self.__getFuncaoOpcao(dado - 1)
-        funcao(self)
+        if (funcao != None):
+            funcao(self)
 
     def __getFuncaoOpcao(self, dado: int):
         opcoes = self.__menu.Opcoes
@@ -37,6 +65,14 @@ class Jogo():
                 return Jogo.jogar
             case opcoes.INI_ENCERRAR:
                 return Jogo.encerrar
+            case opcoes.CONF_ADICIONAR:
+                return Jogo.confAdicionaPalavra
+            case opcoes.CONF_REMOVER:
+                return Jogo.confRemovePalavra
+            case opcoes.CONF_LISTAR:
+                return Jogo.confListaPalavras
+            case opcoes.CONF_ENCERRAR:
+                return Jogo.confEncerrar
         # raise função não encontrada
 
     def __entraOpcao(self):
@@ -68,11 +104,12 @@ class Jogo():
     def __getEstado(self):
         return self.__estado
     
-    def __setEstado(self, estado: Estado):
+    def setEstado(self, estado: Estado):
         self.__estado = estado
 
 jogo = Jogo()
+jogo.setEstado(Estado.INICIAL)
 
 while (True):
     jogo.mostraMenu()
-    jogo.aguardaDado()
+    jogo.aguardaFuncao()

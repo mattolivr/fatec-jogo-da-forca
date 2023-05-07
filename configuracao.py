@@ -1,6 +1,7 @@
 class Configuracao:
     def __init__(self):
         self.__pathArquivoConfig = 'config.txt'
+        self.__palavras = []
         self.__palavras = self.getPalavras()
 
     def adicionaPalavra(self, novaPalavra: str):
@@ -25,7 +26,7 @@ class Configuracao:
             raise ValueError("Palavra não existe na lista")
 
     def listaPalavras(self):
-        palavras = self.getPalavras
+        palavras = self.getPalavras()
         for palavra in palavras:
             # mostra o índice + 1 para ficar mais humano
             print(self.__palavras.index(palavra) + 1, palavra, sep=' - ')
@@ -59,8 +60,8 @@ class Configuracao:
     def __getPalavrasArquivoConfig(self) -> list[str]:
         try: 
             arquivo = open(self.__pathArquivoConfig, 'r')
-            return arquivo.readlines()
+            palavras = arquivo.readlines()
+            arquivo.close()
+            return palavras
         except:
             return []
-        finally:
-            arquivo.close()
