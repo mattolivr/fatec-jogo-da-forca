@@ -13,7 +13,7 @@ class Configuracao:
         except:
             raise ValueError("Palavra não existe na lista")
 
-    def removePalavra(self, indicePalavra: int):
+    def removePalavraIndice(self, indicePalavra: int):
         # trata entrada humana como começando em 1, então subtrai para corrigir
         indicePalavra =- 1
         if (indicePalavra <= 0):
@@ -25,7 +25,8 @@ class Configuracao:
             raise ValueError("Palavra não existe na lista")
 
     def listaPalavras(self):
-        for palavra in self.getPalavras:
+        palavras = self.getPalavras
+        for palavra in palavras:
             # mostra o índice + 1 para ficar mais humano
             print(self.__palavras.index(palavra) + 1, palavra, sep=' - ')
 
@@ -34,7 +35,7 @@ class Configuracao:
         self.__salvaPalavrasArquivoConfig()
 
     def getPalavras(self) -> list[str]:
-        if len(self.__palavras != 0):
+        if (len(self.__palavras) != 0):
             return self.__palavras
         else:
             return self.__getPalavrasArquivoConfig()
@@ -51,7 +52,7 @@ class Configuracao:
         finally:
             arquivo.close()
 
-    def __retornaListaPalavrasSalvar(palavras: list[str]):
+    def __retornaListaPalavrasSalvar(self, palavras: list[str]):
         for palavra in palavras:
             palavra += ' \n'
 

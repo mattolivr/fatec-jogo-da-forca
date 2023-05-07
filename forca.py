@@ -1,15 +1,20 @@
 from enum import Enum
 
-class Estado(str, Enum):
-    INICIAL = 'Inicial'
-    CONFIGURACAO = 'Configuração'
-    PARTIDA = 'Partida'
+class Forca:
+    def __init__(self):
+        pass
 
-def getEstado():
-    # TODO implementar
-    return Estado.INICIAL
-# criaForca
-    # montar a parte visual
-    # selecionaPalavra
-# adicionaErro
-# verificaLetra
+    def criaForca(self):
+        pass
+
+    def selecionaPalavra(self):
+        pass
+
+    def adicionaErro(self):
+        pass
+
+    def adicionaAcerto(self):
+        pass
+
+    def verificaLetra(self):
+        pass
