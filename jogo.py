@@ -3,18 +3,17 @@ import os
 from menu import Menu
 from configuracao import Configuracao
 from estado import Estado
+from forca import Forca
 
 class Jogo():
-
     def __init__(self):
         self.exit = False
         self.setEstado(Estado.INICIAL)
         self.__limpaConsole()
         self.__menu = Menu()
-
-    def configurar(self):
         self.__configuracao = Configuracao()
 
+    def configurar(self):
         self.setEstado(Estado.CONFIGURACAO)
         self.mostraMenu()
         self.aguardaFuncao()
@@ -59,7 +58,16 @@ class Jogo():
             self.setEstado(Estado.INICIAL)
 
     def jogar(self):
-        pass
+        palavrasConfiguradas = self.__configuracao.getPalavras()
+        if (len(palavrasConfiguradas) == 0):
+            print("Nenhuma palavra encontrada. Por favor, realize a configuração")
+            return
+
+        self.setEstado(Estado.PARTIDA)
+        self.__forca = Forca(palavrasConfiguradas)
+
+        for linha in self.__forca.layoutForca:
+            print(linha)
 
     def encerrar(self):
         self.exit = True
