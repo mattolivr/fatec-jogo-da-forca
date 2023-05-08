@@ -65,9 +65,23 @@ class Jogo():
 
         self.setEstado(Estado.PARTIDA)
         self.__forca = Forca(palavrasConfiguradas)
+        
+        while(True):
+            self.__limpaConsole()
+            self.__forca.exibeForca()
 
-        for linha in self.__forca.layoutForca:
-            print(linha)
+            # validar
+            letra = str(input("Digite uma letra"))
+            if(len(letra) != 1):
+                print("Letra inválida")
+                continue
+
+            if(self.__forca.verificaLetra(letra)):
+                self.__forca.adicionaAcerto(letra)
+            else:
+                self.__forca.adicionaErro(letra)
+
+            # valida status da partida (perdeu ou venceu)            
 
     def encerrar(self):
         self.exit = True
