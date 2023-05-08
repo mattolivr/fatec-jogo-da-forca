@@ -6,13 +6,13 @@ class Configuracao:
 
     def adicionaPalavra(self, novaPalavra: str):
         if (novaPalavra != ''):
-            self.__palavras.append(str(novaPalavra))
+            self.__palavras.append(novaPalavra.strip())
 
     def removePalavra(self, palavra: str):
         try:
             self.__palavras.remove(palavra)
         except:
-            raise ValueError("Palavra não existe na lista")
+            raise ValueError("A palavra inserida não existe na lista")
 
     def removePalavraIndice(self, indicePalavra: int):
         # trata entrada humana como começando em 1, então subtrai para corrigir
@@ -27,10 +27,13 @@ class Configuracao:
 
     def listaPalavras(self):
         palavras = self.getPalavras()
-        print("== Palavras adicionadas ==")
-        for palavra in palavras:
-            # mostra o índice + 1 para ficar mais humano
-            print(self.__palavras.index(palavra) + 1, palavra, sep=' - ', end='')
+        if (len(palavras) > 0):
+            print("== Palavras adicionadas ==")
+            for palavra in palavras:
+                # mostra o índice + 1 para ficar mais humano
+                print(self.__palavras.index(palavra) + 1, palavra, sep=' - ')
+        else:
+            print("Nenhuma palavra configurada")
 
     def salvaPalavras(self):
         print("Salvando configurações...")
@@ -58,14 +61,19 @@ class Configuracao:
     def __retornaListaPalavrasSalvar(self, palavras: list[str]):
         novaLista = ''
         for palavra in palavras:
-            novaLista += palavra + ' \n'
+            novaLista += palavra + '\n'
         return novaLista
 
     def __getPalavrasArquivoConfig(self) -> list[str]:
+        palavras = []
         try: 
             arquivo = open(self.__pathArquivoConfig, 'r')
             palavras = arquivo.readlines()
             arquivo.close()
-            return palavras
         except:
-            return []
+            palavras = []
+
+        for indice, palavra in enumerate(palavras):
+            palavras[indice] = palavra.replace('\n', '')
+
+        return palavras

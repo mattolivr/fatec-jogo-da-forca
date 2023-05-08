@@ -24,19 +24,25 @@ class Jogo():
 
         if (len(palavra) > 0):
             self.__configuracao.adicionaPalavra(palavra)
-
-        print("Palavra", palavra, "foi adicionada")
-        self.__confirmaFuncao()
+            print("Palavra", palavra, "adicionada")
+            self.__confirmaFuncao()
         self.__limpaConsole()
 
     def confRemovePalavra(self):
         # TODO: adicionar remoção por índice
-        palavra = input("Insira uma palavra: ")
+        self.__configuracao.listaPalavras()
+        palavra = input("Insira uma palavra para remover: ")
 
-        try:
-            self.__configuracao.removePalavra(palavra)
-        except Exception as e:
-            print(str(e))
+        if (len(palavra) > 0):
+            try:
+                self.__configuracao.removePalavra(palavra)
+            except Exception as e:
+                print(str(e))
+            else:
+                print("Palavra", palavra, "removida")
+            self.__confirmaFuncao()
+        self.__limpaConsole()
+        
 
     def confListaPalavras(self):
         self.__configuracao.listaPalavras()
