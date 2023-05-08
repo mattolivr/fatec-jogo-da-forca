@@ -35,10 +35,10 @@ class Forca:
         return False
 
     def adicionaErro(self, letra: str):
-        if (letra in self.__erros or letra in self.__acertos):
+        if (letra.lower() in self.__erros or letra.lower() in self.__acertos):
             raise Exception("Letra já inserida")
 
-        self.__erros.append(letra)
+        self.__erros.append(letra.lower())
         self.__atualizaErros()
 
     def __atualizaErros(self):
@@ -69,21 +69,33 @@ class Forca:
                 layout[4] = "|       / \   "
 
     def adicionaAcerto(self, letra: str):
-        if (letra in self.__erros or letra in self.__acertos):
+        if (letra.lower() in self.__erros or letra.lower() in self.__acertos):
             raise Exception("Letra já inserida")
         
-        self.__acertos.append(letra)
+        self.__acertos.append(letra.lower())
         self.__atualizaAcertos()
 
     def __atualizaAcertos(self):
         acertos = ""
 
         for letra in self.__palavra:
-            if (letra in self.__acertos):
+            if (letra.lower() in self.__acertos):
                 acertos += letra
             else:
                 acertos += '_'
         self.layoutForca[8] = "Palavra: " + acertos
 
-    def verificaLetra(self):
-        pass
+    def verificaLetra(self, letra: str):
+        if (letra.lower() in self.__palavra.lower()):
+            return True
+        return False
+
+    def validaVitoria(self):
+        if (len(self.__acertos) == len(self.__palavra)):
+            return True
+        return False
+        
+    def validaDerrota(self):
+        if (len(self.__erros) == 6):
+            return True
+        return False

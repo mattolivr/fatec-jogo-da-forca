@@ -24,7 +24,7 @@ class Jogo():
         if (len(palavra) > 0):
             self.__configuracao.adicionaPalavra(palavra)
             print("Palavra", palavra, "adicionada")
-            self.__confirmaFuncao()
+            self.__mostraConfirmacao()
         self.__limpaConsole()
 
     def confRemovePalavra(self):
@@ -39,13 +39,13 @@ class Jogo():
                 print(str(e))
             else:
                 print("Palavra", palavra, "removida")
-            self.__confirmaFuncao()
+            self.__mostraConfirmacao()
         self.__limpaConsole()
         
 
     def confListaPalavras(self):
         self.__configuracao.listaPalavras()
-        self.__confirmaFuncao()
+        self.__mostraConfirmacao()
         self.__limpaConsole()
 
     def confEncerrar(self):
@@ -71,18 +71,38 @@ class Jogo():
             self.__forca.exibeForca()
 
             # validar
-            letra = str(input("Digite uma letra"))
+            letra = str(input("Digite uma letra: "))
             if(len(letra) != 1):
                 print("Letra inválida")
+                self.__mostraConfirmacao()
                 continue
 
-            if(self.__forca.verificaLetra(letra)):
-                self.__forca.adicionaAcerto(letra)
+            try:
+                if(self.__forca.verificaLetra(letra)):
+                    self.__forca.adicionaAcerto(letra)
+                else:
+                    self.__forca.adicionaErro(letra)
+            except Exception as e:
+                print(e)
+                self.__mostraConfirmacao()
             else:
-                self.__forca.adicionaErro(letra)
-
-            # valida status da partida (perdeu ou venceu)            
-
+                if (self.__validaEncerramento()):
+                    self.__mostraConfirmacao()
+                    break
+        self.setEstado(Estado.INICIAL)
+        self.__limpaConsole()
+        
+    def __validaEncerramento(self):
+        if (self.__forca.validaVitoria()):
+            print("=== VOCÊ VENCEU! ===")
+            return True
+        if (self.__forca.validaDerrota()):
+            # TODO: confirmação "quer tentar novamente?"
+            print("=== FIM DE JOGO ===")
+            print("Você perdeu. Mas não desista, tente de novo!")
+            return True
+        return False
+    
     def encerrar(self):
         self.exit = True
 
@@ -150,7 +170,7 @@ class Jogo():
             return False
         return True
 
-    def __confirmaFuncao(self):
+    def __mostraConfirmacao(self):
         input("Precione enter para continuar ")
 
     def __getEstado(self):
