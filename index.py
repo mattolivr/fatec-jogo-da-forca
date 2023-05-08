@@ -1,3 +1,5 @@
+import os
+
 from menu import Menu
 from configuracao import Configuracao
 from estado import Estado
@@ -5,7 +7,9 @@ from estado import Estado
 class Jogo():
 
     def __init__(self):
+        self.exit = False
         self.setEstado(Estado.INICIAL)
+        self.__limpaConsole()
         self.__menu = Menu()
 
     def configurar(self):
@@ -19,9 +23,11 @@ class Jogo():
         palavra = input("Insira uma palavra: ")
 
         if (len(palavra) > 0):
-            self.__configuracao.adicionaPalavra(self)
+            self.__configuracao.adicionaPalavra(palavra)
 
-        print("palavra", palavra, "adicionada")
+        print("Palavra", palavra, "foi adicionada")
+        self.__confirmaFuncao()
+        self.__limpaConsole()
 
     def confRemovePalavra(self):
         # TODO: adicionar remoção por índice
@@ -29,27 +35,42 @@ class Jogo():
 
         try:
             self.__configuracao.removePalavra(palavra)
-        except e:
+        except Exception as e:
             print(str(e))
 
     def confListaPalavras(self):
         self.__configuracao.listaPalavras()
+        self.__confirmaFuncao()
+        self.__limpaConsole()
 
-    def confEncerrar():
-        jogo.setEstado(Estado.INICIAL)
+    def confEncerrar(self):
+        try:
+            self.__configuracao.salvaPalavras()
+        except Exception as e:
+            print(e)
+        else:
+            print("Configurações salvas com sucesso")
+            jogo.setEstado(Estado.INICIAL)
 
     def jogar(self):
         pass
 
     def encerrar(self):
-        pass
+        self.exit = True
 
     def mostraMenu(self):
         self.__menu.montaMenu(self.__getEstado())
 
     def aguardaFuncao(self):
         dado = self.__entraOpcao()
+        self.__limpaConsole()
         self.__executaFuncao(dado)
+
+    def __limpaConsole(self):
+        if (os.name == 'Windows'):
+            os.system('cls')
+        else:
+            os.system('clear')
 
     def __executaFuncao(self, dado: int):
         funcao = self.__getFuncaoOpcao(dado - 1)
@@ -101,6 +122,9 @@ class Jogo():
             return False
         return True
 
+    def __confirmaFuncao(self):
+        input("Precione enter para continuar ")
+
     def __getEstado(self):
         return self.__estado
     
@@ -111,5 +135,8 @@ jogo = Jogo()
 jogo.setEstado(Estado.INICIAL)
 
 while (True):
+    if (jogo.exit):
+        break
+    
     jogo.mostraMenu()
     jogo.aguardaFuncao()

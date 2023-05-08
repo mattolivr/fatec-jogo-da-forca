@@ -6,7 +6,7 @@ class Configuracao:
 
     def adicionaPalavra(self, novaPalavra: str):
         if (novaPalavra != ''):
-            self.__palavras.append(novaPalavra)
+            self.__palavras.append(str(novaPalavra))
 
     def removePalavra(self, palavra: str):
         try:
@@ -27,9 +27,10 @@ class Configuracao:
 
     def listaPalavras(self):
         palavras = self.getPalavras()
+        print("== Palavras adicionadas ==")
         for palavra in palavras:
             # mostra o índice + 1 para ficar mais humano
-            print(self.__palavras.index(palavra) + 1, palavra, sep=' - ')
+            print(self.__palavras.index(palavra) + 1, palavra, sep=' - ', end='')
 
     def salvaPalavras(self):
         print("Salvando configurações...")
@@ -43,19 +44,22 @@ class Configuracao:
 
     def __salvaPalavrasArquivoConfig(self):
         # TODO: implementar criptografia
+        palavras = self.__retornaListaPalavrasSalvar(self.__palavras)
         try:
             arquivo = open(self.__pathArquivoConfig, 'w')
-            palavras = map(self.__retornaListaPalavrasSalvar, self.listaPalavras)
-
-            arquivo.writelines(palavras)
-        except:
-            print("Erro ao salvar. Por favor, tente novamente")
+            arquivo.write(palavras)
+        except Exception as e:
+            print(e, '\n')
+            raise Exception("Erro ao salvar. Por favor, tente novamente")
         finally:
+            self.__palavras = []
             arquivo.close()
 
     def __retornaListaPalavrasSalvar(self, palavras: list[str]):
+        novaLista = ''
         for palavra in palavras:
-            palavra += ' \n'
+            novaLista += palavra + ' \n'
+        return novaLista
 
     def __getPalavrasArquivoConfig(self) -> list[str]:
         try: 
