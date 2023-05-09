@@ -2,7 +2,7 @@ from enum import Enum
 import random
 class Forca:
     def __init__(self, palavras: list[str]):
-        self.__palavra = self.__selecionaPalavra(palavras)
+        self.palavra = self.__selecionaPalavra(palavras)
         self.__acertos = []
         self.__erros = []
         self.layoutForca = self.__criaForca()
@@ -30,7 +30,7 @@ class Forca:
             print(linha)
 
     def verificaLetra(self, letra: str) -> bool:
-        if (letra in self.__palavra):
+        if (letra in self.palavra):
             return True
         return False
 
@@ -78,7 +78,7 @@ class Forca:
     def __atualizaAcertos(self):
         acertos = ""
 
-        for letra in self.__palavra:
+        for letra in self.palavra:
             if (letra.lower() in self.__acertos):
                 acertos += letra
             else:
@@ -86,12 +86,12 @@ class Forca:
         self.layoutForca[8] = "Palavra: " + acertos
 
     def verificaLetra(self, letra: str):
-        if (letra.lower() in self.__palavra.lower()):
+        if (letra.lower() in self.palavra.lower()):
             return True
         return False
 
     def validaVitoria(self):
-        if (len(self.__acertos) == len(self.__palavra)):
+        if (len(self.__acertos) == len(self.palavra)):
             return True
         return False
         

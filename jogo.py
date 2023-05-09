@@ -18,7 +18,7 @@ class Jogo():
         self.mostraMenu()
         self.aguardaFuncao()
 
-    def confAdicionaPalavra(self):
+    def __confAdicionaPalavra(self):
         palavra = input("Insira uma palavra: ")
 
         if (len(palavra) > 0):
@@ -27,7 +27,7 @@ class Jogo():
             self.__mostraConfirmacao()
         self.__limpaConsole()
 
-    def confRemovePalavra(self):
+    def __confRemovePalavra(self):
         # TODO: adicionar remoção por índice
         self.__configuracao.listaPalavras()
         palavra = input("Insira uma palavra para remover: ")
@@ -43,12 +43,12 @@ class Jogo():
         self.__limpaConsole()
         
 
-    def confListaPalavras(self):
+    def __confListaPalavras(self):
         self.__configuracao.listaPalavras()
         self.__mostraConfirmacao()
         self.__limpaConsole()
 
-    def confEncerrar(self):
+    def __confEncerrar(self):
         try:
             self.__configuracao.salvaPalavras()
         except Exception as e:
@@ -58,40 +58,53 @@ class Jogo():
             self.setEstado(Estado.INICIAL)
 
     def jogar(self):
-        palavrasConfiguradas = self.__configuracao.getPalavras()
-        if (len(palavrasConfiguradas) == 0):
-            print("Nenhuma palavra encontrada. Por favor, realize a configuração")
+        try:
+            self.__partidaIniciar()
+        except Exception as exception:
+            print(exception)
             return
-
-        self.setEstado(Estado.PARTIDA)
-        self.__forca = Forca(palavrasConfiguradas)
         
         while(True):
             self.__limpaConsole()
             self.__forca.exibeForca()
-
-            # validar
-            letra = str(input("Digite uma letra: "))
-            if(len(letra) != 1):
-                print("Letra inválida")
-                self.__mostraConfirmacao()
-                continue
-
+            
             try:
-                if(self.__forca.verificaLetra(letra)):
+                letra = self.__partidaEntraLetra()
+
+                if (self.__forca.verificaLetra(letra)):
                     self.__forca.adicionaAcerto(letra)
                 else:
                     self.__forca.adicionaErro(letra)
-            except Exception as e:
-                print(e)
+            except Exception as exception:
+                print(exception)
                 self.__mostraConfirmacao()
             else:
                 if (self.__validaEncerramento()):
                     self.__mostraConfirmacao()
                     break
+        
         self.setEstado(Estado.INICIAL)
         self.__limpaConsole()
         
+    def __partidaIniciar(self):
+        palavrasConfiguradas = self.__configuracao.getPalavras()
+        if (len(palavrasConfiguradas) == 0):
+            raise Exception("Nenhuma palavra encontrada. Por favor, realize a configuração")
+
+        self.setEstado(Estado.PARTIDA)
+        self.__forca = Forca(palavrasConfiguradas)
+
+    def __partidaEntraLetra(self):
+        letra = str(input("Digite uma letra: "))
+
+        if(len(letra) != 1):
+            raise Exception("Insira apenas uma letra!") 
+
+        if(letra.isnumeric()):
+            raise Exception("São aceitas somente letras!")
+
+        return letra
+
     def __validaEncerramento(self):
         if (self.__forca.validaVitoria()):
             print("=== VOCÊ VENCEU! ===")
@@ -100,6 +113,7 @@ class Jogo():
             # TODO: confirmação "quer tentar novamente?"
             print("=== FIM DE JOGO ===")
             print("Você perdeu. Mas não desista, tente de novo!")
+            print("A palavra era:", self.__forca.palavra)
             return True
         return False
     
@@ -135,13 +149,13 @@ class Jogo():
             case opcoes.INI_ENCERRAR:
                 return self.encerrar
             case opcoes.CONF_ADICIONAR:
-                return self.confAdicionaPalavra
+                return self.__confAdicionaPalavra
             case opcoes.CONF_REMOVER:
-                return self.confRemovePalavra
+                return self.__confRemovePalavra
             case opcoes.CONF_LISTAR:
-                return self.confListaPalavras
+                return self.__confListaPalavras
             case opcoes.CONF_ENCERRAR:
-                return self.confEncerrar
+                return self.__confEncerrar
         # raise função não encontrada
 
     def __entraOpcao(self):
