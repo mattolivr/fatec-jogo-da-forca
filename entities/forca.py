@@ -1,5 +1,6 @@
 from enum import Enum
 import random
+
 class Forca:
     def __init__(self, palavras: list[str]):
         self.palavra = self.__selecionaPalavra(palavras)

@@ -1,12 +1,24 @@
+from .criptografia import Criptografia
+
 class Configuracao:
     def __init__(self):
-        self.__pathArquivoConfig = 'config.txt'
+        self.__pathPalavras = 'palavras.txt'
         self.__palavras = []
         self.__palavras = self.getPalavras()
+        self.criptografia = Criptografia()
 
     def adicionaPalavra(self, novaPalavra: str):
         if (novaPalavra != ''):
-            self.__palavras.append(novaPalavra.strip())
+            if (not self.__existeNaLista(novaPalavra)):
+                self.__palavras.append(novaPalavra.strip())
+            else:
+                raise ValueError("A palavra", palavra, "já existe na lista")
+
+    def __existeNaLista(self, novaPalavra: str):
+        for palavra in self.listaPalavras():
+            if (palavra.lower() == novaPalavra.lower()):
+                return True
+        return False
 
     def removePalavra(self, palavra: str):
         try:
@@ -46,10 +58,9 @@ class Configuracao:
             return self.__getPalavrasArquivoConfig()
 
     def __salvaPalavrasArquivoConfig(self):
-        # TODO: implementar criptografia
-        palavras = self.__retornaListaPalavrasSalvar(self.__palavras)
+        palavras = self.__getMensagensEncriptografadas(self.__palavras)
         try:
-            arquivo = open(self.__pathArquivoConfig, 'w')
+            arquivo = open(self.__pathPalavras, 'w')
             arquivo.write(palavras)
         except Exception as e:
             print(e, '\n')
@@ -58,16 +69,10 @@ class Configuracao:
             self.__palavras = []
             arquivo.close()
 
-    def __retornaListaPalavrasSalvar(self, palavras: list[str]):
-        novaLista = ''
-        for palavra in palavras:
-            novaLista += palavra + '\n'
-        return novaLista
-
     def __getPalavrasArquivoConfig(self) -> list[str]:
         palavras = []
         try: 
-            arquivo = open(self.__pathArquivoConfig, 'r')
+            arquivo = open(self.__pathPalavras, 'r')
             palavras = arquivo.readlines()
             arquivo.close()
         except:
@@ -77,3 +82,14 @@ class Configuracao:
             palavras[indice] = palavra.replace('\n', '')
 
         return palavras
+
+    def __getMensagensEncriptografadas(self, palavras: list[str]):
+        dados = ''
+
+        try:
+            for palavra in palavras:
+                dados += self.criptografia.criptografar(palavra).decode() + '\n'
+        except Exception as e:
+            print(e)
+        else:
+            return dados

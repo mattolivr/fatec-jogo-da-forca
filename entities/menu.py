@@ -1,6 +1,5 @@
 from enum import Enum
-
-from estado import Estado
+from .estado import Estado
 
 class Menu:
     class Opcoes(str, Enum):

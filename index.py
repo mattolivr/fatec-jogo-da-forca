@@ -1,5 +1,5 @@
-from jogo import Jogo
-from estado import Estado
+from entities.jogo import Jogo
+from entities.estado import Estado
 
 jogo = Jogo()
 jogo.setEstado(Estado.INICIAL)

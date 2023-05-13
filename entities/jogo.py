@@ -1,13 +1,14 @@
 import os
 
-from menu import Menu
-from configuracao import Configuracao
-from estado import Estado
-from forca import Forca
+from .menu import Menu
+from .configuracao import Configuracao
+from .estado import Estado
+from .forca import Forca
 
 class Jogo():
     def __init__(self):
         self.exit = False
+        self.ESC = '\x1b'
         self.setEstado(Estado.INICIAL)
         self.__limpaConsole()
         self.__menu = Menu()
@@ -22,9 +23,14 @@ class Jogo():
         palavra = input("Insira uma palavra: ")
 
         if (len(palavra) > 0):
-            self.__configuracao.adicionaPalavra(palavra)
-            print("Palavra", palavra, "adicionada")
-            self.__mostraConfirmacao()
+            try:
+                self.__configuracao.adicionaPalavra(palavra)
+            except Exception as e:
+                print(e)
+            else:
+                print("Palavra", palavra, "adicionada")
+            finally:
+                self.__mostraConfirmacao()
         self.__limpaConsole()
 
     def __confRemovePalavra(self):
@@ -71,10 +77,15 @@ class Jogo():
             try:
                 letra = self.__partidaEntraLetra()
 
+                if (letra == self.ESC):
+                    if (self.__mostraEscolhaBooleana("Deseja encerrar o jogo?")):
+                        break
+
                 if (self.__forca.verificaLetra(letra)):
                     self.__forca.adicionaAcerto(letra)
                 else:
-                    self.__forca.adicionaErro(letra)
+                    if (letra != self.ESC):
+                        self.__forca.adicionaErro(letra)
             except Exception as exception:
                 print(exception)
                 self.__mostraConfirmacao()
@@ -138,6 +149,18 @@ class Jogo():
         funcao = self.__getFuncaoOpcao(dado - 1)
         if (funcao != None):
             funcao()
+
+    def __mostraEscolhaBooleana(self, msg: str):
+        print(msg, "Enter para sim, Esc para não")
+        entrada = None
+
+        while(entrada != self.ESC or entrada != ''):
+            entrada = input("")
+
+            if (entrada == self.ESC):
+                return False
+            if (entrada == ''):
+                return True
 
     def __getFuncaoOpcao(self, dado: int):
         opcoes = self.__menu.Opcoes
