@@ -117,6 +117,9 @@ class Jogo():
         return letra
 
     def __validaEncerramento(self):
+        self.__limpaConsole()
+        self.__forca.exibeForca()
+
         if (self.__forca.validaVitoria()):
             print("=== VOCÊ VENCEU! ===")
             return True

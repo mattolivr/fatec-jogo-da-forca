@@ -1,21 +1,27 @@
+import os
 from .criptografia import Criptografia
 
 class Configuracao:
     def __init__(self):
         self.__pathPalavras = 'palavras.txt'
-        self.__palavras = []
-        self.__palavras = self.getPalavras()
         self.criptografia = Criptografia()
+        self.__palavras = self.__getPalavrasArquivoConfig()
 
     def adicionaPalavra(self, novaPalavra: str):
         if (novaPalavra != ''):
+
+            for letra in novaPalavra:
+                if(letra.isnumeric()):
+                    raise Exception("São aceitas somente letras!")
+            
             if (not self.__existeNaLista(novaPalavra)):
                 self.__palavras.append(novaPalavra.strip())
             else:
-                raise ValueError("A palavra", palavra, "já existe na lista")
+                raise ValueError("A palavra", novaPalavra, "já existe na lista")
 
     def __existeNaLista(self, novaPalavra: str):
-        for palavra in self.listaPalavras():
+        lista = self.getPalavras()
+        for palavra in lista:
             if (palavra.lower() == novaPalavra.lower()):
                 return True
         return False
@@ -43,7 +49,8 @@ class Configuracao:
             print("== Palavras adicionadas ==")
             for palavra in palavras:
                 # mostra o índice + 1 para ficar mais humano
-                print(self.__palavras.index(palavra) + 1, palavra, sep=' - ')
+                if (self.__existeNaLista(palavra)):
+                    print(palavras.index(palavra) + 1, palavra, sep=' - ')
         else:
             print("Nenhuma palavra configurada")
 
@@ -53,42 +60,49 @@ class Configuracao:
 
     def getPalavras(self) -> list[str]:
         if (len(self.__palavras) != 0):
-            return self.__palavras
+            listaPalavras = self.__palavras
         else:
-            return self.__getPalavrasArquivoConfig()
+            listaPalavras = self.__getPalavrasArquivoConfig()
+
+        return listaPalavras
 
     def __salvaPalavrasArquivoConfig(self):
         palavras = self.__getMensagensEncriptografadas(self.__palavras)
         try:
-            arquivo = open(self.__pathPalavras, 'w')
-            arquivo.write(palavras)
+            arquivo = open(self.__pathPalavras, 'wb')
+            
+            for palavra in palavras:
+                arquivo.write(palavra + b'\n')
         except Exception as e:
             print(e, '\n')
             raise Exception("Erro ao salvar. Por favor, tente novamente")
         finally:
-            self.__palavras = []
             arquivo.close()
 
-    def __getPalavrasArquivoConfig(self) -> list[str]:
+    def __getPalavrasArquivoConfig(self) -> list[bytes()]:
         palavras = []
         try: 
-            arquivo = open(self.__pathPalavras, 'r')
-            palavras = arquivo.readlines()
-            arquivo.close()
-        except:
+            arquivo = open(self.__pathPalavras, 'rb')
+            palavrasLidas = arquivo.readlines()
+
+            for palavra in palavrasLidas:
+                palavras.append(self.criptografia.descriptografar(palavra).decode())
+        except FileNotFoundError:
+            arquivo = open(self.__pathPalavras, 'w')
+        except Exception as e:
+            print(e)
             palavras = []
-
-        for indice, palavra in enumerate(palavras):
-            palavras[indice] = palavra.replace('\n', '')
-
+        else:
+            self.__palavras = palavras
+        finally:
+            arquivo.close()
         return palavras
 
     def __getMensagensEncriptografadas(self, palavras: list[str]):
-        dados = ''
-
+        dados = []
         try:
             for palavra in palavras:
-                dados += self.criptografia.criptografar(palavra).decode() + '\n'
+                dados.append(self.criptografia.criptografar(palavra.encode()))
         except Exception as e:
             print(e)
         else:
