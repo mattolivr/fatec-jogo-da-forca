@@ -7,6 +7,7 @@ class Forca:
         self.__acertos = []
         self.__erros = []
         self.layoutForca = self.__criaForca()
+        self.__qtdeLetrasAcerto = 0
 
         self.__atualizaAcertos()
         self.__atualizaErros()
@@ -78,9 +79,11 @@ class Forca:
 
     def __atualizaAcertos(self):
         acertos = ""
+        self.__qtdeLetrasAcerto = 0
 
         for letra in self.palavra:
             if (letra.lower() in self.__acertos):
+                self.__qtdeLetrasAcerto += 1
                 acertos += letra
             else:
                 acertos += '_'
@@ -92,7 +95,7 @@ class Forca:
         return False
 
     def validaVitoria(self):
-        if (len(self.__acertos) == len(self.palavra)):
+        if (self.__qtdeLetrasAcerto == len(self.palavra)):
             return True
         return False
         
